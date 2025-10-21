@@ -14,10 +14,9 @@ gazelle_binary(
 
 # gazelle:prefix github.com/zaccari/golink
 # gazelle:proto file
-# gazelle:go_naming_convention go_default_library
 gazelle(name = "gazelle")
 
-# Gazelle target for updating BUILD files
+# Gazelle target for updating go repositories
 gazelle(
     name = "gazelle-update-repos",
     args = [
@@ -26,4 +25,5 @@ gazelle(
         "-prune",
     ],
     command = "update-repos",
+    gazelle = ":gazelle_bin",
 )
