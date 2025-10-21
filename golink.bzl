@@ -1,10 +1,23 @@
+"""Golink rule for copying files into the workspace."""
+
 load("@bazel_skylib//lib:shell.bzl", "shell")
 
-def gen_copy_files_script(ctx, files):
+def gen_copy_files_script(ctx, files, **kwargs):
+    """ Generates a script to copy files into the workspace.
+
+    Args:
+        ctx: The context object.
+        files: The files to copy.
+        **kwargs: Additional arguments.
+    Returns:
+        A list of DefaultInfo objects.
+    """
     content = ""
     for f in files:
-        line = "cp -f %s %s/;\n" % (f.path, ctx.attr.dir)
+        print(f.path)
+        line = "cp -f .bazel/%s %s/;\n" % (f.path, ctx.attr.dir)
         content += line
+
     substitutions = {
         "@@CONTENT@@": shell.quote(content),
     }
@@ -21,12 +34,21 @@ def gen_copy_files_script(ctx, files):
             files = depset([out]),
             runfiles = runfiles,
             executable = out,
+            **kwargs
         ),
     ]
 
 def golink_impl(ctx, **kwargs):
-    return gen_copy_files_script(ctx, ctx.files.dep)
+    """Implementation of the golink rule.
 
+    This rule copies the files from the dependency into the workspace.
+    Args:
+        ctx: The context object.
+        **kwargs: Additional arguments.
+    Returns:
+        A DefaultInfo object.
+    """
+    return gen_copy_files_script(ctx, ctx.files.dep, **kwargs)
 
 _golink = rule(
     implementation = golink_impl,
