@@ -1,0 +1,18 @@
+"""golink - Bazel module for linking Go generated sources"""
+
+module(
+    name = "golink",
+    version = "2.0.0",
+    compatibility_level = 1,
+)
+
+# Core Bazel dependencies
+bazel_dep(name = "rules_go", version = "0.52.0")
+bazel_dep(name = "gazelle", version = "0.41.0")
+bazel_dep(name = "protobuf", version = "29.2")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+
+# Go dependencies for the gazelle plugin
+go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
+go_deps.from_file(go_mod = "//:go.mod")
+use_repo(go_deps)

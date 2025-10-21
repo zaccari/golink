@@ -1,4 +1,10 @@
+# Bazel build artifacts
 bazel-*
+.bazel/
 
-# IntellIJ project file
+# IntelliJ project file
 golink.iml
+*.iml
+
+# Go build artifacts
+go.sum

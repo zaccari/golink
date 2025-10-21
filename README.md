@@ -1,78 +1,212 @@
 # golink
-Bazel hack for linking go generated srcs. Find more detials on this post I wrote [here](https://medium.com/goc0de/a-cute-bazel-proto-hack-for-golang-ides-2a4ef0415a7f?source=friends_link&sk=2ee762dff53812f8068b44f9e0f085f7)
 
-You can use it for copying over golang generated proto files into your source directory. 
-This is important if you want to make your IDE work because you project needs to be `go build` compliant. 
+Bazel module for linking Go generated sources (protobuf files) into your source directory. This tool solves IDE integration issues when using Bazel-generated Go protobuf files.
 
-Note that this is a hack and there will be more ideal solutions in the future unfortunately no solution exists for the problem stated above just yet. 
+> **Note**: This is a maintained fork updated for Bazel 8.4.2+ with bzlmod support. The original project was created by [Nikunj Yadav](https://github.com/nikunjy/golink).
 
+Find more details on this post written [here](https://medium.com/goc0de/a-cute-bazel-proto-hack-for-golang-ides-2a4ef0415a7f?source=friends_link&sk=2ee762dff53812f8068b44f9e0f085f7)
 
-# Installation
-Follow these instructions strictly. 
+**Purpose**: Copy golang generated proto files into your source directory so your IDE can find them and your project remains `go build` compliant.
 
-## Add this to your `WORKSPACE`
+**Note**: This is a workaround until better native solutions exist for Bazel/Go/Proto IDE integration.
+
+## Requirements
+
+- Bazel 8.4.2+ (recommended to use [Bazelisk](https://github.com/bazelbuild/bazelisk))
+- Bzlmod enabled (default in Bazel 7+)
+- [Gazelle](https://github.com/bazelbuild/bazel-gazelle) for auto-generating build rules
+
+## Installation
+
+### For Bazel 8.4.2+ with Bzlmod (Recommended)
+
+Add this to your `MODULE.bazel` file:
+
+```starlark
+bazel_dep(name = "golink", version = "2.0.0")
+
+# If using from a git repository instead:
+git_override(
+    module_name = "golink",
+    remote = "https://github.com/zaccari/golink.git",
+    commit = "<commit-hash>",  # Use the latest commit
+)
 ```
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+### Legacy WORKSPACE Installation (Bazel < 7)
+
+For older Bazel versions using WORKSPACE:
+
+```starlark
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "golink",
-    urls = ["https://github.com/nikunjy/golink/archive/v1.0.0.tar.gz"],
-    sha256 = "ea728cfc9cb6e2ae024e1d5fbff185224592bbd4dad6516f3cc96d5155b69f0d",
-    strip_prefix = "golink-1.0.0",
+    urls = ["https://github.com/zaccari/golink/archive/v2.0.0.tar.gz"],
+    sha256 = "<sha256>",  # Update with actual SHA256
+    strip_prefix = "golink-2.0.0",
 )
 ```
 
-## Use Gazelle
-You have to use [gazelle](https://github.com/bazelbuild/bazel-gazelle). If you don't know what that means follow the link and instruction there in. 
+## Setup
 
-*(only if you don't use gazelle)*, you wll probably add two things in `WORKSPACE` 
+### 1. Configure Gazelle Binary
 
-Something like this, check me on version number 
-```
-  http_archive(
-        name = "bazel_gazelle",
-        urls = [
-            "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
-            "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
-        ],
-        sha256 = "d8c45ee70ec39a57e7a05e5027c32b1576cc7f16d9dd37135b0eddde45cf1b10",
-    )`
- ```
- 
- In your `BUILD` file you will add something like 
- ```
- load("@bazel_gazelle//:def.bzl", "gazelle")
+In your root `BUILD` or `BUILD.bazel` file:
 
- # gazelle:prefix github.com/example/project
- gazelle(name = "gazelle")
-```
+```starlark
+load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
 
-This will generate `BUILD.bazel` files for your golang and proto stuff when you run `bazel run //:gazelle` !!! 
-
-## Integrate golink
-```
-load("@bazel_gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle_binary")
+# Create a custom gazelle binary that includes the golink plugin
 gazelle_binary(
-     name = "gazelle_binary",
-     languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link:go_default_library"],
-     visibility = ["//visibility:public"],
- )
-```
+    name = "gazelle_binary",
+    languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link"],
+    visibility = ["//visibility:public"],
+)
 
-and change your gazelle target to use the above binary 
-
-```
-# gazelle:prefix github.com/nikunjy/go
+# Configure your gazelle target to use the custom binary
+# gazelle:prefix github.com/example/your-project
 gazelle(
     name = "gazelle",
-    gazelle = "//:gazelle_binary",
+    gazelle = ":gazelle_binary",
 )
 ```
 
-Now when you run `bazel run //:gazelle` it will gnerate a target of `go_proto_link` type for your protos. If you run this target you will copy the generated sources into your repo. 
+### 2. Run Gazelle
 
+Generate `BUILD.bazel` files and `go_proto_link` targets:
 
-## Example
-Here are two commits I did on my sammpe monorepo
-* [Adding golink dependency](https://github.com/nikunjy/go/commit/515430cb666facb10df81a1df6597cd4cf24e69e)
-* [Result of running `bazel run //:gazelle`](https://github.com/nikunjy/go/commit/7423c84db9a584d7429a34600e5a621654ea3cad)
+```bash
+bazelisk run //:gazelle
+```
+
+This will:
+
+- Generate `BUILD.bazel` files for your Go and proto code
+- Automatically create `go_proto_link` targets for each `go_proto_library`
+- Name them as `<proto_name>_link`
+
+### 3. Copy Generated Proto Files
+
+After running Gazelle, you'll have `go_proto_link` targets. Run them to copy generated `.pb.go` files:
+
+```bash
+# Copy all proto files in a specific package
+bazelisk run //path/to/package:my_proto_link
+
+# Or copy all proto files in your project
+bazelisk run //...
+```
+
+This copies the generated `.pb.go` files from Bazel's build directory into your source tree.
+
+## Example Usage
+
+Given a proto file at `api/v1/user.proto`:
+
+1. **Run Gazelle**:
+
+   ```bash
+   bazelisk run //:gazelle
+   ```
+
+2. **Gazelle generates** in `api/v1/BUILD.bazel`:
+
+   ```starlark
+   proto_library(
+       name = "user_proto",
+       srcs = ["user.proto"],
+   )
+
+   go_proto_library(
+       name = "user_go_proto",
+       proto = ":user_proto",
+   )
+
+   # Auto-generated by golink gazelle plugin
+   go_proto_link(
+       name = "user_go_proto_link",
+       dep = ":user_go_proto",
+   )
+   ```
+
+3. **Copy generated files**:
+
+   ```bash
+   bazelisk run //api/v1:user_go_proto_link
+   ```
+
+4. **Result**: `api/v1/user.pb.go` is now in your source tree and your IDE can see it!
+
+## Manual Usage (Without Gazelle)
+
+You can also manually use the `go_proto_link` rule:
+
+```starlark
+load("@golink//proto:proto.bzl", "go_proto_link")
+
+go_proto_link(
+    name = "my_proto_link",
+    dep = ":my_go_proto_library",
+    dir = "path/to/output/directory",  # Optional, defaults to package directory
+)
+```
+
+## How It Works
+
+1. Bazel generates `.pb.go` files in `bazel-bin/` during `go_proto_library` builds
+2. `go_proto_link` extracts these files from the `go_generated_srcs` output group
+3. Creates an executable script that copies files to your source directory
+4. Running the target executes the copy operation
+5. Your IDE and `go build` can now see the generated files
+
+## Troubleshooting
+
+**Q: My IDE still can't find the proto files**
+
+- Make sure you've run the `go_proto_link` target: `bazelisk run //package:target_link`
+- Check that `.pb.go` files exist in your source directory
+- Restart your IDE/language server
+
+**Q: Gazelle isn't generating `go_proto_link` targets**
+
+- Verify you're using the custom `gazelle_binary` with the golink plugin
+- Check that you have `go_proto_library` targets in your BUILD files
+- Re-run gazelle: `bazelisk run //:gazelle`
+
+**Q: Build fails with "OutputGroupInfo not found"**
+
+- Ensure your `go_proto_library` rules are up to date
+- Check that you're using compatible versions of rules_go and protobuf
+
+## Migration from v1.x to v2.0
+
+1. Add `MODULE.bazel` to your project (if not already using bzlmod)
+2. Update the target reference from `@golink//gazelle/go_link:go_default_library` to `@golink//gazelle/go_link`
+3. Update any custom uses of golink rules to use new repository names (`@rules_go` instead of `@io_bazel_rules_go`)
+4. Remove old WORKSPACE dependencies if fully migrated to bzlmod
+
+## Development
+
+Common commands are available via the Makefile:
+
+```bash
+make help          # Show all available commands
+make build         # Build all targets
+make test          # Run all tests
+make gazelle       # Generate/update BUILD files
+make update-repos  # Update go dependencies
+make format        # Format bazel files
+make clean         # Clean bazel artifacts
+```
+
+## Examples
+
+See the original example commits for a complete setup:
+
+- [Adding golink dependency](https://github.com/nikunjy/go/commit/515430cb666facb10df81a1df6597cd4cf24e69e)
+- [Result of running gazelle](https://github.com/nikunjy/go/commit/7423c84db9a584d7429a34600e5a621654ea3cad)
+
+## License
+
+See [LICENSE](LICENSE) file.
