@@ -26,7 +26,7 @@ gazelle:
 
 # Update gazelle to also update go repositories
 update-repos:
-	bazelisk run //:gazelle -- update-repos -from_file=go.mod
+	bazelisk run //:gazelle-update-repos
 
 # Format all bazel files
 format:
@@ -44,4 +44,4 @@ clean:
 # Sync go.mod dependencies
 sync:
 	go mod tidy
-	bazelisk run //:gazelle -- update-repos -from_file=go.mod
+	bazelisk run //:gazelle-update-repos

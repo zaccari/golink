@@ -1,0 +1,29 @@
+load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+
+exports_files(
+    ["copy_into_workspace.sh"],
+    visibility = ["//visibility:public"],
+)
+
+# Gazelle binary that includes the golink plugin for development
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = DEFAULT_LANGUAGES + ["//gazelle/go_link"],
+    visibility = ["//visibility:public"],
+)
+
+# gazelle:prefix github.com/zaccari/golink
+# gazelle:proto file
+# gazelle:go_naming_convention go_default_library
+gazelle(name = "gazelle")
+
+# Gazelle target for updating BUILD files
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
