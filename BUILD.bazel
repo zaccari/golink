@@ -1,7 +1,11 @@
 load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
 
 exports_files(
-    ["copy_into_workspace.sh"],
+    [
+        "copy_into_workspace.sh",
+        "go.mod",
+        "go.sum",
+    ],
     visibility = ["//visibility:public"],
 )
 
