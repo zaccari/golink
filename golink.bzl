@@ -14,7 +14,6 @@ def gen_copy_files_script(ctx, files, **kwargs):
     """
     content = ""
     for f in files:
-        print(f.path)
         line = "cp -f .bazel/%s %s/;\n" % (f.path, ctx.attr.dir)
         content += line
 

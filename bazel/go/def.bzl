@@ -1,8 +1,11 @@
-load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_toolchains")
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+"""Golink dependencies for Bazel."""
+
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
 def go_rules_deps():
+    """Dependencies for the Go rules."""
     go_rules_dependencies()
     go_register_toolchains()
     protobuf_deps()

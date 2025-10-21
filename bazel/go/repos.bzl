@@ -1,5 +1,9 @@
+"""Golink repositories for Bazel."""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 def add_go_repos():
+    """Adds the Go repositories for Bazel."""
     http_archive(
         name = "io_bazel_rules_go",
         sha256 = "7b9bbe3ea1fccb46dcfa6c3f3e29ba7ec740d8733370e21cdc8937467b4a4349",
@@ -22,4 +26,3 @@ def add_go_repos():
         strip_prefix = "protobuf-3.11.4",
         urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.4.zip"],
     )
-
