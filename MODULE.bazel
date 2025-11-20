@@ -2,7 +2,7 @@
 
 module(
     name = "golink",
-    version = "2.0.1",
+    version = "2.0.0",
     compatibility_level = 1,
 )
 
