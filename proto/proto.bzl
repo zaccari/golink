@@ -1,4 +1,5 @@
 """ Go rule to link generated proto Go files into workspace. """
+
 # load("@bazel_skylib//lib:shell.bzl", "shell")
 load("//:golink.bzl", "gen_copy_files_script")
 
