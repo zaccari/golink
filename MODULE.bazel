@@ -1,7 +1,7 @@
-"""golink - Bazel module for linking Go generated sources"""
+"""go_link - Bazel module for linking Go generated sources"""
 
 module(
-    name = "golink",
+    name = "go_link",
     version = "2.0.0",
     compatibility_level = 1,
 )

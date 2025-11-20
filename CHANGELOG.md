@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Bzlmod support**: Full support for Bazel's new module system (bzlmod)
-- `MODULE.bazel` file defining the golink module and dependencies
+- `MODULE.bazel` file defining the go_link module and dependencies
 - `.bazelrc` configuration for Bazel 8.4.2+ optimizations
 - `.bazelversion` file pinning to Bazel 8.4.2
 - `Makefile` with common development commands
@@ -49,7 +49,7 @@ To migrate from v1.x to v2.0.0:
 
 1. **Add bzlmod support** (if not already using it):
    - Create a `MODULE.bazel` file in your project root
-   - Add `bazel_dep(name = "golink", version = "2.0.0")` or use `git_override` for the latest
+   - Add `bazel_dep(name = "go_link", version = "2.0.0")` or use `git_override` for the latest
 
 2. **Update target references**:
 
@@ -73,7 +73,7 @@ Initial release by Nikunj Yadav.
 
 ### Added
 
-- Core `golink` rule for copying Bazel-generated files to workspace
+- Core `go_link` rule for copying Bazel-generated files to workspace
 - `go_proto_link` rule for proto-specific file linking
 - Gazelle plugin for automatic `go_proto_link` target generation
 - Support for `go_proto_library` output group extraction

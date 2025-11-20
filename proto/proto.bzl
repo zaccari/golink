@@ -1,7 +1,7 @@
 """ Go rule to link generated proto Go files into workspace. """
 
 # load("@bazel_skylib//lib:shell.bzl", "shell")
-load("//:golink.bzl", "gen_copy_files_script")
+load("//:go_link.bzl", "gen_copy_files_script")
 
 def go_proto_link_impl(ctx, **_):
     return gen_copy_files_script(ctx, ctx.attr.dep[OutputGroupInfo].go_generated_srcs.to_list())

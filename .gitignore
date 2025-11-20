@@ -3,6 +3,6 @@ bazel-*
 .bazel/
 
 # IntelliJ project file
-golink.iml
+go_link.iml
 *.iml
 

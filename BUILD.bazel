@@ -9,7 +9,7 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 
-# Gazelle binary that includes the golink plugin for development
+# Gazelle binary that includes the go_link plugin for development
 gazelle_binary(
     name = "gazelle_bin",
     languages = DEFAULT_LANGUAGES + ["//gazelle/go_link"],

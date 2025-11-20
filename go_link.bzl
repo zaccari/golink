@@ -37,8 +37,8 @@ def gen_copy_files_script(ctx, files, **kwargs):
         ),
     ]
 
-def golink_impl(ctx, **kwargs):
-    """Implementation of the golink rule.
+def go_link_impl(ctx, **kwargs):
+    """Implementation of the go_link rule.
 
     This rule copies the files from the dependency into the workspace.
     Args:
@@ -49,8 +49,8 @@ def golink_impl(ctx, **kwargs):
     """
     return gen_copy_files_script(ctx, ctx.files.dep, **kwargs)
 
-_golink = rule(
-    implementation = golink_impl,
+_go_link = rule(
+    implementation = go_link_impl,
     executable = True,
     attrs = {
         "dir": attr.string(),
@@ -64,9 +64,9 @@ _golink = rule(
     },
 )
 
-def golink(name, **kwargs):
+def go_link(name, **kwargs):
     if not "dir" in kwargs:
         dir = native.package_name()
         kwargs["dir"] = dir
 
-    _golink(name = name, **kwargs)
+    _go_link(name = name, **kwargs)
