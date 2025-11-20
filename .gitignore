@@ -6,5 +6,3 @@ bazel-*
 golink.iml
 *.iml
 
-# Go build artifacts
-go.sum
