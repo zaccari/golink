@@ -52,12 +52,14 @@ To migrate from v1.x to v2.0.0:
    - Add `bazel_dep(name = "golink", version = "2.0.0")` or use `git_override` for the latest
 
 2. **Update target references**:
+
    ```diff
    - languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link:go_default_library"]
    + languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link"]
    ```
 
 3. **Update repository URLs** (if pinning to a specific version):
+
    ```diff
    - urls = ["https://github.com/nikunjy/golink/archive/v1.0.0.tar.gz"]
    + urls = ["https://github.com/zaccari/golink/archive/v2.0.0.tar.gz"]
