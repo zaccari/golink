@@ -16,7 +16,7 @@ gazelle_binary(
     visibility = ["//visibility:public"],
 )
 
-# gazelle:prefix github.com/zaccari/golink
+# gazelle:prefix github.com/zaccari/go_link
 # gazelle:proto file
 gazelle(name = "gazelle")
 

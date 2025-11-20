@@ -1,4 +1,4 @@
-module github.com/zaccari/golink
+module github.com/zaccari/go_link
 
 go 1.22.9
 

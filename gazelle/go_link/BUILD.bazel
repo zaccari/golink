@@ -3,7 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_link",
     srcs = ["proto_gen.go"],
-    importpath = "github.com/zaccari/golink/gazelle/go_link",
+    importpath = "github.com/zaccari/go_link/gazelle/go_link",
     visibility = ["//visibility:public"],
     deps = [
         "@gazelle//config",

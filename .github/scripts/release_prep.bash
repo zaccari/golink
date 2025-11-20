@@ -22,7 +22,7 @@ Add the following to your \`MODULE.bazel\` file to install go_link:
 bazel_dep(name = "go_link", version = "$VERSION")
 git_override(
     module_name = "go_link",
-    remote = "https://github.com/zaccari/golink.git",
+    remote = "https://github.com/zaccari/go_link.git",
     commit = "$SHA",
 )
 \`\`\`

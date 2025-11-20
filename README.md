@@ -28,7 +28,7 @@ bazel_dep(name = "golink", version = "2.0.0")
 # If using from a git repository instead:
 git_override(
     module_name = "golink",
-    remote = "https://github.com/zaccari/golink.git",
+    remote = "https://github.com/zaccari/go_link.git",
     commit = "<commit-hash>",  # Use the latest commit
 )
 ```
@@ -42,7 +42,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "golink",
-    urls = ["https://github.com/zaccari/golink/archive/v2.0.0.tar.gz"],
+    urls = ["https://github.com/zaccari/go_link/archive/v2.0.0.tar.gz"],
     sha256 = "<sha256>",  # Update with actual SHA256
     strip_prefix = "golink-2.0.0",
 )
@@ -60,7 +60,7 @@ load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
 # Create a custom gazelle binary that includes the golink plugin
 gazelle_binary(
     name = "gazelle_binary",
-    languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link"],
+    languages = DEFAULT_LANGUAGES + ["@go_link//gazelle/go_link"],
     visibility = ["//visibility:public"],
 )
 
@@ -143,7 +143,7 @@ Given a proto file at `api/v1/user.proto`:
 You can also manually use the `go_proto_link` rule:
 
 ```starlark
-load("@golink//proto:proto.bzl", "go_proto_link")
+load("@go_link//proto:proto.bzl", "go_proto_link")
 
 go_proto_link(
     name = "my_proto_link",
@@ -182,7 +182,7 @@ go_proto_link(
 ## Migration from v1.x to v2.0
 
 1. Add `MODULE.bazel` to your project (if not already using bzlmod)
-2. Update the target reference from `@golink//gazelle/go_link:go_default_library` to `@golink//gazelle/go_link`
+2. Update the target reference from `@go_link//gazelle/go_link:go_default_library` to `@go_link//gazelle/go_link`
 3. Update any custom uses of golink rules to use new repository names (`@rules_go` instead of `@io_bazel_rules_go`)
 4. Remove old WORKSPACE dependencies if fully migrated to bzlmod
 

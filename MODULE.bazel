@@ -17,4 +17,3 @@ bazel_dep(name = "buildifier_prebuilt", version = "7.3.1", dev_dependency = True
 # Go dependencies for the gazelle plugin
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.from_file(go_mod = "//:go.mod")
-use_repo(go_deps)

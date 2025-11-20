@@ -20,11 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking**: Upgraded to Bazel 8.4.2 (from ancient Bazel 1.x era)
-- **Breaking**: Updated repository references from `github.com/nikunjy/golink` to `github.com/zaccari/golink`
+- **Breaking**: Updated repository references from `github.com/nikunjy/golink` to `github.com/zaccari/go_link`
 - **Breaking**: Updated canonical repository names:
   - `@io_bazel_rules_go` → `@rules_go`
   - `@bazel_gazelle` → `@gazelle`
-  - Target `@golink//gazelle/go_link:go_default_library` → `@golink//gazelle/go_link`
+  - Target `@go_link//gazelle/go_link:go_default_library` → `@go_link//gazelle/go_link`
 - Updated dependencies:
   - `rules_go` to v0.52.0
   - `gazelle` to v0.41.0
@@ -54,15 +54,15 @@ To migrate from v1.x to v2.0.0:
 2. **Update target references**:
 
    ```diff
-   - languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link:go_default_library"]
-   + languages = DEFAULT_LANGUAGES + ["@golink//gazelle/go_link"]
+   - languages = DEFAULT_LANGUAGES + ["@go_link//gazelle/go_link:go_default_library"]
+   + languages = DEFAULT_LANGUAGES + ["@go_link//gazelle/go_link"]
    ```
 
 3. **Update repository URLs** (if pinning to a specific version):
 
    ```diff
    - urls = ["https://github.com/nikunjy/golink/archive/v1.0.0.tar.gz"]
-   + urls = ["https://github.com/zaccari/golink/archive/v2.0.0.tar.gz"]
+   + urls = ["https://github.com/zaccari/go_link/archive/v2.0.0.tar.gz"]
    ```
 
 4. **Upgrade Bazel**: Ensure you're using Bazel 8.4.2+ (recommended to use Bazelisk)
@@ -79,5 +79,5 @@ Initial release by Nikunj Yadav.
 - Support for `go_proto_library` output group extraction
 - Basic documentation and examples
 
-[2.0.0]: https://github.com/zaccari/golink/compare/v1.0.0...v2.0.0
+[2.0.0]: https://github.com/zaccari/go_link/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/nikunjy/golink/releases/tag/v1.0.0
