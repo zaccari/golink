@@ -51,7 +51,7 @@ jobs:
       #       ${{ runner.os }}-bazel-
 
       - name: Build go_link
-        run: bazelisk build //...
+        run: bazelisk build //gazelle/go_link:go_link
 
   build-summary:
     name: Build Summary

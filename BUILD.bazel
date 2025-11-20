@@ -20,14 +20,14 @@ gazelle_binary(
 # gazelle:proto file
 gazelle(name = "gazelle")
 
-# Gazelle target for updating go repositories
-gazelle(
-    name = "gazelle-update-repos",
-    args = [
-        "-from_file=go.mod",
-        "-to_macro=deps.bzl%go_dependencies",
-        "-prune",
-    ],
-    command = "update-repos",
-    gazelle = ":gazelle_bin",
-)
+# # Gazelle target for updating go repositories
+# gazelle(
+#     name = "gazelle-update-repos",
+#     args = [
+#         "-from_file=go.mod",
+#         "-to_macro=deps.bzl%go_dependencies",
+#         "-prune",
+#     ],
+#     command = "update-repos",
+#     gazelle = ":gazelle_bin",
+# )

@@ -22,7 +22,7 @@ jobs:
         uses: bazelbuild/setup-bazelisk@v3
       - name: Build release
         run: |
-          bazelisk build //...
+          bazelisk build //gazelle/go_link:go_link
 
       - name: Get tag version
         id: version
