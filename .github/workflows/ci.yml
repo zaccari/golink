@@ -41,14 +41,14 @@ jobs:
           fi
         shell: bash
 
-      - name: Mount Bazel cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/bazel
-          key: ${{ runner.os }}-bazel-${{ matrix.bazel-version }}-${{ hashFiles('MODULE.bazel', '**/*.bzl') }}
-          restore-keys: |
-            ${{ runner.os }}-bazel-${{ matrix.bazel-version }}-
-            ${{ runner.os }}-bazel-
+      # - name: Mount Bazel cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.cache/bazel
+      #     key: ${{ runner.os }}-bazel-${{ matrix.bazel-version }}-${{ hashFiles('MODULE.bazel', '**/*.bzl') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-bazel-${{ matrix.bazel-version }}-
+      #       ${{ runner.os }}-bazel-
 
       - name: Build go_link
         run: bazelisk build //...
