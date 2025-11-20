@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Bazel Documentation
+    url: https://bazel.build/
+    about: General Bazel questions and documentation
+  - name: rules_go Documentation
+    url: https://github.com/bazelbuild/rules_go
+    about: Questions about rules_go

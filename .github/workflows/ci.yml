@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**/README.md"
+      - CHANGELOG.md
+      - CONTRIBUTING.md
+      - LICENSE
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**/README.md"
+      - CHANGELOG.md
+      - CONTRIBUTING.md
+      - LICENSE
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        bazel-version: ['8.4.2', 'latest']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Configure Bazel version
+        run: |
+          if [ "${{ matrix.bazel-version }}" != "latest" ]; then
+            echo "${{ matrix.bazel-version }}" > .bazelversion
+          fi
+        shell: bash
+
+      - name: Mount Bazel cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/bazel
+          key: ${{ runner.os }}-bazel-${{ matrix.bazel-version }}-${{ hashFiles('MODULE.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-${{ matrix.bazel-version }}-
+            ${{ runner.os }}-bazel-
+
+      - name: Build go_link
+        run: bazelisk build //...
+
+  build-summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+    steps:
+      - name: Check build status
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "Build failed!"
+            exit 1
+          fi
+          echo "All builds succeeded!"
